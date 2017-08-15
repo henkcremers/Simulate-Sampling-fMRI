@@ -1,9 +1,10 @@
 function [scatfig,s] = simsam_plotcor(data,varargin)
 filename = 'corrplot';
-saveplot = 0;
-fsize = 35;
-psize = 10;
-% get the user input.
+saveplot = 0; 
+fsize = 35; % font size
+psize = 10; 
+
+% Input.
 for i = 1:length(varargin)
     arg = varargin{i};
     if ischar(arg)
@@ -11,6 +12,10 @@ for i = 1:length(varargin)
             case 'saveplot'
                 saveplot = 1;
                 filename = varargin{i+1};
+            case 'fsize'
+                fsize = varargin{i+1};
+            case 'psize'
+                psize = varargin{i+1};    
         end
     end
 end
@@ -19,7 +24,7 @@ V1 = data(:,1);
 V2 = data(:,2);
 c = corr(V1,V2);
 
-% fix the location depending on correlation value
+% set the location depending on correlation value
 if c>0; yloc = 0.82; elseif c<0; yloc = 0.18; end
 
 
@@ -28,7 +33,6 @@ scatfig = figure;
 legtxt = ['r = ' num2str(double(c))]; legtxt = legtxt(1:9);
 s = scatter(V1,V2);
 set(s,'MarkerFaceColor','b');
-%set(obj,'visible','off');
 
 % add the correlation coef
 annotation('textbox',...

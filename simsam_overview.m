@@ -16,7 +16,7 @@ load setupinfoWD.mat
 %% (2) Set-up the data
 setup  = simsam_setup_data(setupinfo);
 
-%% (3) Create the full sample data
+%% (3) Generate the full sample data
 simsam = simsam_generate_data(setup);
 
 %% (4) Run the sampling stats.

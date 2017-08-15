@@ -85,9 +85,12 @@ for s = 1:length(nsamp)
             samval = repdat;
         elseif strmatch(thresholds{t},'FDR')
             disp(['  Threshold: ' thresholds{t}])
-            mfdr = nanmedian(repfdr.val); % use median FDR - more stable
-            samact = reppval<mfdr;
-            samval = repdat;      
+            % filter out extremely low FDR values - ? 
+            mfdr = nanmedian(repfdr.val);
+            filter = repfdr.val>(mfdr/100) | isnan(repfdr.val);
+            %loc = repfdr.loc;
+            samval = repdat(:,filter);
+            samact = repfdr.loc(:,filter);
         elseif strmatch(thresholds{t},'BONF')
             disp(['  Threshold: ' thresholds{t}])
             samact = reppval<(0.05/nvox);

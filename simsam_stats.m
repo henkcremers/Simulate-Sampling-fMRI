@@ -13,7 +13,7 @@ FSactmat = repmat(FSact',1,rep);
 % Effect Size
 % ------------
 
-% - mean 
+% mean 
 samsig = samval.*double(samact);
 samsigm = sum(abs(samsig))./sum(samact);
 mEffsam = nanmean(samsigm);
@@ -22,7 +22,7 @@ stats.meaneff = samsigm;
 stats.meaneffM = mEffsam;
 stats.meaneffCI95 = mEffsamCI95;
 
-% - max 
+% max 
 sammax = max(samval);
 stats.maxeff = sammax;
 stats.maxeffM = mean(sammax);
@@ -123,7 +123,6 @@ ACC = (TP + TN)/(nvox);
 %false positive rate.
 FPR = 1-spec;
 
-%LRP
 LRP = sens/(1-spec);
 LRN = (1-sens)/spec;
 ER = (1-sens)/(1-spec);
@@ -134,7 +133,7 @@ prec = TP/(TP+FP);
 %F1
 F1 = 2*TP/(2*TP+FP+FN);
 
-%put in structure
+% add to structure
 stats.spec = spec;
 stats.sens = sens;
 stats.sensCI95 = sensCI95;
