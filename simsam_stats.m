@@ -47,24 +47,6 @@ stats.diffrep  = dm;
 stats.diffrepM = mean(dm);
 stats.diffrepCI95 = prctile(dm,[2.5 97.5]);
 
-% Spatial Correlation
-% -----------------------
-% pos = FSval>0;
-% neg = FSval<0;
-spatcor = corr(s1(FSact,:),s2(FSact,:),'type','Spearman');
-spatcor = diag(spatcor);
-
-% spatcorP = corr(s1((FSact & pos),:),s2((FSact & pos),:),'type','Spearman');
-% spatcorP = diag(spatcorP);
-% spatcorN = corr(s1((FSact & neg),:),s2((FSact & neg),:),'type','Spearman');
-% spatcorN = diag(spatcorN);
-% spatcorA = corr(abs(s1(FSact,:)),abs(s2(FSact,:)),'type','Spearman');
-% spatcorA = diag(spatcorA);
-
-stats.correp  = spatcor;
-stats.correpM = mean(spatcor);
-stats.correpCI95 = prctile(spatcor,[2.5 97.5]);
-
 % Dice Coefficient
 % ---------------
 act1 = samact(:,1:end-1);
@@ -78,6 +60,20 @@ DCvec(isnan(DCvec)) = 0;
 stats.dicerep = DCvec;
 stats.dicerepM = mean(DCvec); 
 stats.dicerepCI95 = prctile(DCvec,[2.5 97.5]); 
+
+% Spatial Correlation
+% -----------------------
+for j = 1:(rep-1)
+    if sum(sameact(:,j))>1;
+        sigcorr= corr(s1(sameact(:,j),j),s2(sameact(:,j),j),'type','Spearman');
+        spatcor(j) = sigcorr;
+    else
+        spatcor(j) = 0;
+    end
+end
+stats.correp  = spatcor;
+stats.correpM = mean(spatcor);
+stats.correpCI95 = prctile(spatcor,[2.5 97.5]);
 
 %% sensitivity / specificity 
 % --------------------------

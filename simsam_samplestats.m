@@ -12,7 +12,7 @@ FSact = simsam.FSBBact;       % full sample logical vector
 
 % defaults.
 rep = 2000;                            % number of samples in total
-nfigdat = 4;                           % number of samples to save sampledata for figure
+nfigdat = 4;                           % number of samples save for figure
 nsamp = 10:5:150;                      % vector with the sample sizes
 thresholds = {0.05 0.01 'FDR' 'BONF'}; % thresholds: numeric (0-1),'FDR' or 'BONF')
 
