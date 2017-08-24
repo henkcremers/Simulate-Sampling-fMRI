@@ -8,10 +8,9 @@
 % close all; clc; clear all
 
 %% (1) load the set-up information.(Cluster location, size etc) 
-% this is an example of the weak diffuse scenario. Alternatively you can
-% generate a new set of brain-behavior correlations and main effects 
-% (see simsam_setup_scenario.m for examples). 
+% This is info for the weak diffuse scenario, load setupinfoSL.mat for the SL scenario. 
 load setupinfoWD.mat
+% load setupinfoSL.mat
  
 %% (2) Set-up the data
 setup  = simsam_setup_data(setupinfo);
