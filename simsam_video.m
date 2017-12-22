@@ -5,19 +5,19 @@ close all; clear all; clc
 %% settings
 %  ======================================
 ntot = 10000;  % full sample size
-cval = 0.3;    % correlation values
+cval = 0.3;    % correlation value
 std1 = 10;     % std variable 1 
 std2 = 10;     % std variable 2 
-m1 = 10;
-m2 = 10;
+m1 = 100;
+m2 = 100;
 mu = [m1 m2];
 Sigma = [std1^2,cval*std1*std2;cval*std1*std2,std2^2];
 fullsample = mvnrnd(mu,Sigma,ntot);
 v2 = fullsample(:,2);
 v1 = fullsample(:,1);
-samples = 10:10:20;
-ns = 10;
-filename = 'subsampling_r=0.3.avi’;
+samples = 10:10:150;
+ns = 30;
+filename = 'subsampling_r=0.3.avi';
 
 % Prep video file.
 % -----------------
@@ -41,8 +41,53 @@ sigcount = 0;
 totcount = 0; 
 count = 0;
 
-% Start
-% ------
+% First image 
+% ===============
+
+scatfig = figure;
+subplot(2,1,1);
+
+% layer 1 - full sample
+% --------------------
+s1 = scatter(v1,v2);
+c = 'b';
+set(s1,'MarkerFaceColor',c)
+set(s1,'MarkerEdgeColor',c)
+xlabel('Variable 1')
+ylabel('Variable 2')
+axis([min(v1) max(v1) min(v2) max(v2)])
+
+%plot a regression line..
+coef_fit1 = polyfit(v1,v2,1);
+y_fit1 = polyval(coef_fit1,xlim);
+hold on
+plot(xlim,y_fit1,'k');
+
+xlim = [min(v1) max(v1)];
+ylim = [min(v2) max(v2)];
+
+subplot(2,1,2);
+xlabel('Samples Size')
+ylabel('Correlation Coefficient')
+axis([min(samples)-5 max(samples)+5 -1 1])
+ax = gca;
+ax.XLim = [min(samples)-5 max(samples)+5];
+ax.XTick = samples;
+
+hold on
+
+% fix the background
+set(gca,'Color',[0.9 0.9 0.9]);
+set(gca,'XGrid','on');
+set(gca,'YGrid','on');
+set(0,'DefaultFigureColor',[1 1 1])
+
+F = getframe(scatfig);
+writeVideo(vid,F);
+close(scatfig)
+
+% Start Sampling 
+% ==============
 
 for n = samples;
     for k = 1:ns
@@ -55,8 +100,7 @@ for n = samples;
     % --------------------
     s1 = scatter(v1,v2);
     
-    if count==1; c = 'b'; else c = bgcolor; end
-    
+    c = bgcolor;
     set(s1,'MarkerFaceColor',c)
     set(s1,'MarkerEdgeColor',c)
     xlabel('Variable 1')
@@ -81,7 +125,7 @@ for n = samples;
 
     [c pval] = corrcoef(v2sample,v1sample); c = c(2,1); pval = pval(2,1);
 
-    if count>1
+    %if count>1
     s2 = scatter(v1sample,v2sample);
     set(s2,'MarkerFaceColor','b')
     set(s2,'MarkerEdgeColor','b')
@@ -96,20 +140,28 @@ for n = samples;
     if pval<0.05; linecol = or; end
     p = plot(xlim,y_fit2);
     set(p,'Color',linecol);
-    end
+    %end
     
     subplot(2,1,2); 
-    plot([min(samples) max(samples)],[0.3 0.3],'k') 
-    xlabel('samples Size')
+    plot([min(samples) max(samples)],[cval cval],'k') 
+    xlabel('Samples Size')
     ylabel('Correlation Coefficient')
-    axis([min(samples) max(samples) -1 1])
+    %axis([min(samples) max(samples) -1 1])
+    axis([min(samples)-5 max(samples)+5 -1 1])
     %axis([min(v1) max(v1) min(v2) max(v2)])
+    ax = gca;
+    ax.XLim = [min(samples)-5 max(samples)+5];
+    ax.XTick = samples;
+    
     hold on 
     
     xs = n;
-    if count > 2
-        csvals(count-1) = c;
-        xsvals(count-1) = xs;
+%     if count > 2
+%         csvals(count-1) = c;
+%         xsvals(count-1) = xs;
+       
+        csvals(count) = c;
+        xsvals(count) = xs;
         
         %fix same correlation values...
         low = n-2;
@@ -131,8 +183,12 @@ for n = samples;
         end
         
         %update values.. 
-        csvals(count-1) = c;
-        xsvals(count-1) = xs;
+%         csvals(count-1) = c;
+%         xsvals(count-1) = xs;
+        
+        
+        csvals(count) = c;
+        xsvals(count) = xs;
             
         scatter(xsvals,csvals,'b');
         axis([min(samples)-5 max(samples)+5 -1 1])
@@ -147,8 +203,12 @@ for n = samples;
             set(s3,'MarkerFaceColor',or)
             set(s3,'MarkerEdgeColor',or)
             axis([min(samples)-5 max(samples)+5 -1 1])
+            %axis([min(samples) max(samples) -1 1])
+            ax = gca;
+            ax.XLim = [min(samples)-5 max(samples)+5];
+            ax.XTick = samples;
         end
-    end
+    %end
 
     % fix the background
     set(gca,'Color',[0.9 0.9 0.9]);
